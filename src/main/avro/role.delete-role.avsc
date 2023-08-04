@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "DeleteRoleDto",
+  "namespace": "com.nkia.lucida.role.dto",
+  "doc": "This event records delete role",
+  "fields": [
+    {
+      "name": "roleId",
+      "type": "string"
+    }
+  ]
+}

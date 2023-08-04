@@ -1,0 +1,1 @@
+{"name": "org_access", "description" : "access org page, edit role, edit user", "displayName" : "Organization Management", "action" : "WRITE", "type" : "GENERAL", "restricted" : false}

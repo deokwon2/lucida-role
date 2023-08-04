@@ -1,0 +1,45 @@
+{
+  "type": "record",
+  "name": "OrganizationUserEvent",
+  "namespace": "com.nkia.lucida.account.dto",
+  "fields": [
+    {
+      "name": "eventType",
+      "type": {
+        "type": "enum",
+        "name": "OrgUserEventType",
+        "symbols": [
+          "JOIN",
+          "LEAVE"
+        ]
+      }
+    },
+    {
+      "name": "organizationId",
+      "type": {
+        "type": "string",
+        "avro.java.string": "String"
+      }
+    },
+    {
+      "name": "userId",
+      "type": {
+        "type": "string",
+        "avro.java.string": "String"
+      }
+    },
+    {
+      "name": "roleIds",
+      "type": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "avro.java.string": "String"
+          }
+        },
+        "null"
+      ]
+    }
+  ]
+}

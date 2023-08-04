@@ -1,0 +1,31 @@
+{
+  "type": "record",
+  "name": "OrganizationEvent",
+  "namespace": "com.nkia.lucida.account.dto",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "avro.java.string": "String"
+      }
+    },
+    {
+      "name": "name",
+      "type": {
+        "type": "string",
+        "avro.java.string": "String"
+      }
+    },
+    {
+      "name": "description",
+      "type": [
+        {
+          "type": "string",
+          "avro.java.string": "String"
+        },
+        "null"
+      ]
+    }
+  ]
+}

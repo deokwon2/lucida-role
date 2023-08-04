@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <springProperty scope="context" name="appName" source="spring.application.name"/>
+  <conversionRule conversionWord="clr"
+    converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+  <conversionRule conversionWord="wex"
+    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+  <conversionRule conversionWord="wEx"
+    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+  <property name="CONSOLE_LOG_CHARSET" value="${CONSOLE_LOG_CHARSET:-${file.encoding:-UTF-8}}"/>
+  <property name="CONSOLE_LOG_PATTERN"
+    value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+  <property name="FILE_LOG_PATTERN"
+    value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+  <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+      <timestampFormat>yyyy-MM-dd' 'HH:mm:ss.SSS</timestampFormat>
+      <appendLineSeparator>true</appendLineSeparator>
+      <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+        <prettyPrint>false</prettyPrint>
+      </jsonFormatter>
+    </layout>
+  </appender>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ERROR"
+    class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <file>${LOG_PATH}/errors.log</file>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${LOG_PATTERN}</pattern>
+    </encoder>
+    <!-- Rolling 정책 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- .gz,.zip 등을 넣으면 자동 일자별 로그파일 압축 -->
+      <fileNamePattern>${LOG_PATH}/errors.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- 파일당 최고 용량 kb, mb, gb -->
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+      <maxHistory>60</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <springProperty scope="context"
+    name="LOG_PATH"
+    source="log.config.path"/>
+  <springProperty scope="context"
+    name="LOG_FILE_NAME"
+    source="log.config.filename"/>
+  <appender name="FILE"
+    class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+    <!-- 파일경로 설정 -->
+    <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+
+    <!-- 출력패턴 설정-->
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${FILE_LOG_PATTERN}</pattern>
+    </encoder>
+
+    <!-- Rolling 정책 -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- .gz,.zip 등을 넣으면 자동 일자별 로그파일 압축 -->
+      <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+        class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- 파일당 최고 용량 kb, mb, gb -->
+        <maxFileSize>10MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+      <maxHistory>30</maxHistory>
+      <!--<MinIndex>1</MinIndex> <MaxIndex>10</MaxIndex>-->
+    </rollingPolicy>
+  </appender>
+
+
+  <!--  운영환경에 올라갈 때엔 이 설정이 적용됩니다.-->
+  <springProfile name="prod">
+    <root level="${LOG_LEVEL_ROOT}">
+      <appender-ref ref="JSON"/>
+    </root>
+
+    <logger name="com.nkia.lucida"
+      level="${LOG_LEVEL_APP}"
+      additivity="false">
+      <appender-ref ref="JSON"/>
+    </logger>
+  </springProfile>
+
+
+  <!--    개발환경에 올라갈 때엔 이 설정이 적용됩니다.-->
+  <springProfile name="dev">
+    <root level="${LOG_LEVEL_ROOT}">
+      <appender-ref ref="JSON"/>
+    </root>
+
+    <logger name="com.nkia.lucida"
+      level="${LOG_LEVEL_APP}"
+      additivity="false">
+      <appender-ref ref="JSON"/>
+    </logger>
+  </springProfile>
+
+
+  <!--    개인 PC에서 개발 및 테스트할 때 사용합니다.-->
+  <springProfile name="local">
+    <root level="${LOG_LEVEL_ROOT}">
+      <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <logger name="com.nkia.lucida"
+      level="${LOG_LEVEL_APP}"
+      additivity="false">
+      <appender-ref ref="CONSOLE"/>
+      <appender-ref ref="FILE"/>
+      <appender-ref ref="ERROR"/>
+    </logger>
+  </springProfile>
+
+</configuration>
