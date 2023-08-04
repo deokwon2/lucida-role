@@ -186,9 +186,9 @@ bootRun {
     jvmArgs = [
             "-Dspring.profiles.active=local"
     ]
-    environment "SCHEMA_REGISTRY_URL", "http://192.168.20.181:8081"
-    environment "KAFKA_CLUSTER_BOOTSTRAP", "192.168.20.181:9092"
-    environment "MONGODB_URI", "mongodb://localhost:27017"
-    environment "MONGODB_DATABASE", "shared"
-
+//    environment "SCHEMA_REGISTRY_URL", "http://192.168.20.181:8081"
+//    environment "KAFKA_CLUSTER_BOOTSTRAP", "192.168.20.181:9092"
+//    environment "MONGODB_URI", "mongodb://localhost:27017"
+//    environment "MONGODB_DATABASE", "shared"
+//
 }

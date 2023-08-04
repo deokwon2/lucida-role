@@ -1,27 +1,27 @@
 /* pipeline 변수 설정 */
 def DOCKER_IMAGE_NAME = "role"           // 생성하는 Docker image 이름
 def DOCKER_IMAGE_TAGS = "0.1.${env.BUILD_NUMBER}"  // 생성하는 Docker image 태그
-def DOCKER_REPOSITORY = "192.168.200.79:32000"
-def SERVICE_NAME = "role"
-def SLACK_CHANNEL = "jenkins"
-def SLACK_URL = "https://nkia-hq.slack.com/services/hooks/jenkins-ci/"
-def SLACK_CREDENTIAL_ID = "nkia-hq-slack-token"
+// def DOCKER_REPOSITORY = "192.168.200.79:32000"
+// def SERVICE_NAME = "role"
+// def SLACK_CHANNEL = "jenkins"
+// def SLACK_URL = "https://nkia-hq.slack.com/services/hooks/jenkins-ci/"
+// def SLACK_CREDENTIAL_ID = "nkia-hq-slack-token"
 
-/* Slack 시작 알람 함수 */
-
-def notifyStarted(credential, slack_url, slack_channel) {
-    slackSend(teamDomain: "nkia-hq", tokenCredentialId: "${credential}", baseUrl: "${slack_url}", channel: "${slack_channel}", color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-}
-/* Slack 성공 알람 함수 */
-
-def notifySuccessful(credential, slack_url, slack_channel) {
-    slackSend(teamDomain: "nkia-hq", tokenCredentialId: "${credential}", baseUrl: "${slack_url}", channel: "${slack_channel}", color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-}
-/* Slack 실패 알람 함수 */
-
-def notifyFailed(credential, slack_url, slack_channel) {
-    slackSend(teamDomain: "nkia-hq", tokenCredentialId: "${credential}", baseUrl: "${slack_url}", channel: "${slack_channel}", color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-}
+// /* Slack 시작 알람 함수 */
+//
+// def notifyStarted(credential, slack_url, slack_channel) {
+//     slackSend(teamDomain: "nkia-hq", tokenCredentialId: "${credential}", baseUrl: "${slack_url}", channel: "${slack_channel}", color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+// }
+// /* Slack 성공 알람 함수 */
+//
+// def notifySuccessful(credential, slack_url, slack_channel) {
+//     slackSend(teamDomain: "nkia-hq", tokenCredentialId: "${credential}", baseUrl: "${slack_url}", channel: "${slack_channel}", color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+// }
+// /* Slack 실패 알람 함수 */
+//
+// def notifyFailed(credential, slack_url, slack_channel) {
+//     slackSend(teamDomain: "nkia-hq", tokenCredentialId: "${credential}", baseUrl: "${slack_url}", channel: "${slack_channel}", color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+// }
 
 node { 
     jdk = tool name: 'openJDK 17'
