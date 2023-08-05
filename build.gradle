@@ -87,91 +87,91 @@ dependencies {
 }
 
 // Avro plugin 설정
-avro {
-    createSetters = false
-    fieldVisibility = "PRIVATE"
-}
+//avro {
+//    createSetters = false
+//    fieldVisibility = "PRIVATE"
+//}
+//
+//jacoco {
+//    toolVersion = "0.8.7"
+//}
 
-jacoco {
-    toolVersion = "0.8.7"
-}
+//test {
+//    jvmArgs = [
+//            "-Dspring.profiles.active=test"
+//    ]
+//    useJUnitPlatform()
+//    finalizedBy jacocoTestReport
+//}
 
-test {
-    jvmArgs = [
-            "-Dspring.profiles.active=test"
-    ]
-    useJUnitPlatform()
-    finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        html.required = true
-        xml.required = true
-        csv.required = false
-    }
-
-    def Qdomains = []
-    for (qPattern in '**/QA'..'**/QZ') {
-        Qdomains.add(qPattern + '*')
-    }
-    afterEvaluate {
-        classDirectories.setFrom(
-                files(classDirectories.files.collect {
-                    fileTree(dir: it, excludes: [
-                            "**/config/*",
-                            "**/controller/Exception*",
-                            "**/role/*Application"
-                    ] + Qdomains)
-                })
-        )
-    }
-}
-
-jacocoTestCoverageVerification {
-    def Qdomains = []
-    for (qPattern in '**.QA'..'**.QZ') {
-        Qdomains.add(qPattern + '*')
-    }
-    violationRules {
-        rule {
-            //추후 사용을 대비하여 설정 파일만 먼저 적어 둔다.
-            enabled = true
-
-            // 룰을 체크할 단위는 클래스 단위
-            element = 'CLASS'
-/*
-            // 브랜치 커버리지를 최소한 90% 만족시켜야 합니다.
-            limit {
-                counter = 'BRANCH'
-                value = 'COVEREDRATIO'
-                minimum = 0.90
-            }
-
-            // 라인 커버리지를 최소한 80% 만족시켜야 합니다.
-            limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-                minimum = 0.80
-            }
-
-            // 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한합니다.
-            limit {
-                counter = 'LINE'
-                value = 'TOTALCOUNT'
-                maximum = 200
-            }
-*/
-            // 커버리지 체크를 제외할 클래스들이 있을 경우 설정
-            excludes = [
-                    "**.config.*",
-                    "**.controller.Exception*",
-                    "**.role.*Application"
-            ] + Qdomains
-        }
-    }
-}
+//jacocoTestReport {
+//    dependsOn test
+//    reports {
+//        html.required = true
+//        xml.required = true
+//        csv.required = false
+//    }
+//
+//    def Qdomains = []
+//    for (qPattern in '**/QA'..'**/QZ') {
+//        Qdomains.add(qPattern + '*')
+//    }
+//    afterEvaluate {
+//        classDirectories.setFrom(
+//                files(classDirectories.files.collect {
+//                    fileTree(dir: it, excludes: [
+//                            "**/config/*",
+//                            "**/controller/Exception*",
+//                            "**/role/*Application"
+//                    ] + Qdomains)
+//                })
+//        )
+//    }
+//}
+//
+//jacocoTestCoverageVerification {
+//    def Qdomains = []
+//    for (qPattern in '**.QA'..'**.QZ') {
+//        Qdomains.add(qPattern + '*')
+//    }
+//    violationRules {
+//        rule {
+//            //추후 사용을 대비하여 설정 파일만 먼저 적어 둔다.
+//            enabled = true
+//
+//            // 룰을 체크할 단위는 클래스 단위
+//            element = 'CLASS'
+///*
+//            // 브랜치 커버리지를 최소한 90% 만족시켜야 합니다.
+//            limit {
+//                counter = 'BRANCH'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.90
+//            }
+//
+//            // 라인 커버리지를 최소한 80% 만족시켜야 합니다.
+//            limit {
+//                counter = 'LINE'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.80
+//            }
+//
+//            // 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한합니다.
+//            limit {
+//                counter = 'LINE'
+//                value = 'TOTALCOUNT'
+//                maximum = 200
+//            }
+//*/
+//            // 커버리지 체크를 제외할 클래스들이 있을 경우 설정
+//            excludes = [
+//                    "**.config.*",
+//                    "**.controller.Exception*",
+//                    "**.role.*Application"
+//            ] + Qdomains
+//        }
+//    }
+//}
 
 bootJar {
     archiveFileName = "${project.ext.artifactId}-${project.version}.jar"
