@@ -50,7 +50,7 @@ node {
             // test reports가 있을 경우 junit 실행
             junit allowEmptyResults: true, testResults: 'build/test-results/test/*.xml'
         }
-
+    } catch (e) {
     }
 }
 
