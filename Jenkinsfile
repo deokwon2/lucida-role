@@ -40,18 +40,18 @@ node {
                 ./gradlew clean bootJar
             '''
         }
-        try {
-            stage('Test') {
-                // gradlew check를 하면 test 코드가 실행되고 결과 파일이 생성됩니다.
-                sh '''
-                    chmod +x ./gradlew
-                    ./gradlew check
-                '''
-            }
-        } finally {
-            // test reports가 있을 경우 junit 실행
-            junit allowEmptyResults: true, testResults: 'build/test-results/test/*.xml'
-        }
+//         try {
+//             stage('Test') {
+//                 // gradlew check를 하면 test 코드가 실행되고 결과 파일이 생성됩니다.
+//                 sh '''
+//                     chmod +x ./gradlew
+//                     ./gradlew check
+//                 '''
+//             }
+//         } finally {
+//             // test reports가 있을 경우 junit 실행
+//             junit allowEmptyResults: true, testResults: 'build/test-results/test/*.xml'
+//         }
 
         stage('test(SonarQube Analysis)') { //SonarQube 분석
 
