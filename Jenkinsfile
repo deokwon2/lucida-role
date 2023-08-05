@@ -32,14 +32,14 @@ node {
         stage('Checkout') {
             checkout scm
         }
-        stage('Build') {
-            // gradle wrapper를 프로젝트에 포함하여 repository에 등록했을 시 gradlew 사용이 가능합니다.
-            // gradlew : 빌드 서버에 gradle을 설치하지 않아도 개발 환경과 같은 버전으로 빌드가 가능하게 해 줍니다. (Gradle에서 권장하는 방법)
-            sh '''
-                chmod +x ./gradlew
-                ./gradlew clean bootJar
-            '''
-        }
+//         stage('Build') {
+//             // gradle wrapper를 프로젝트에 포함하여 repository에 등록했을 시 gradlew 사용이 가능합니다.
+//             // gradlew : 빌드 서버에 gradle을 설치하지 않아도 개발 환경과 같은 버전으로 빌드가 가능하게 해 줍니다. (Gradle에서 권장하는 방법)
+//             sh '''
+//                 chmod +x ./gradlew
+//                 ./gradlew clean bootJar
+//             '''
+//         }
 //         try {
 //             stage('Test') {
 //                 // gradlew check를 하면 test 코드가 실행되고 결과 파일이 생성됩니다.
