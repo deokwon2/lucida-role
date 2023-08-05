@@ -50,6 +50,10 @@ node {
             // test reports가 있을 경우 junit 실행
             junit allowEmptyResults: true, testResults: 'build/test-results/test/*.xml'
         }
+
+    }
+}
+
 //         stage('Image Build') {
 //             // jenkins가 설치된 서버의 docker와 같은 docker를 사용하여 빌드 합니다.
 //             sh "docker build -t ${DOCKER_REPOSITORY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAGS} ."
@@ -106,4 +110,4 @@ node {
 //         currentBuild.result = "FAILED"
 //         notifyFailed(SLACK_CREDENTIAL_ID, SLACK_URL, SLACK_CHANNEL)
 //     }
-}
+// }
