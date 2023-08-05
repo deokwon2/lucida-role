@@ -62,7 +62,7 @@ node {
                 sonarAnalysis = sh(returnStatus: true, script:
                     """
                     ${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.host.url=http://192.168.10.12:9000 \
                     -Dsonar.projectKey=${SONAR_PROJECT} \
                     -Dsonar.projectName=${SONAR_PROJECT} \
                     -Dsonar.report.export.path=${scannerHome}/.scannerwork/sonar-report.json \
@@ -81,7 +81,7 @@ node {
             while (true){
                 def sonarScannStatus = sh(returnStdout: true, script: // 소나큐브 분석 상태 API 확인
                     """
-                    curl -u admin:'admin1234' -X GET http://localhost:9000/api/ce/component?component=${SONAR_PROJECT}
+                    curl -u admin:'admin1234' -X GET http://192.168.10.12:9000/api/ce/component?component=${SONAR_PROJECT}
                     """)
                 //queue에 아무것도 없으면 수행
                 if (sonarScannStatus.contains('"queue":[]')){
@@ -89,7 +89,7 @@ node {
                     if (sonarAnalysis == 0) {
                         def qualityGateStatus = sh(returnStdout: true, script: // 소나큐브 결과 API 확인
                             """
-                            curl -u admin:'admin1234' -X GET http://localhost:9000/api/qualitygates/project_status?projectKey=${SONAR_PROJECT}
+                            curl -u admin:'admin1234' -X GET http://192.168.10.12:9000/api/qualitygates/project_status?projectKey=${SONAR_PROJECT}
                             """)
 
                             if (qualityGateStatus.contains('"projectStatus":{"status":"ERROR"')) {
