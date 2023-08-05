@@ -6,6 +6,8 @@ def DOCKER_IMAGE_TAGS = "0.1.${env.BUILD_NUMBER}"  // 생성하는 Docker image 
 // def SLACK_CHANNEL = "jenkins"
 // def SLACK_URL = "https://nkia-hq.slack.com/services/hooks/jenkins-ci/"
 // def SLACK_CREDENTIAL_ID = "nkia-hq-slack-token"
+def SONAR_PROJECT = env.JOB_NAME
+def sonarAnalysis
 
 // /* Slack 시작 알람 함수 */
 //
@@ -50,7 +52,70 @@ node {
             // test reports가 있을 경우 junit 실행
             junit allowEmptyResults: true, testResults: 'build/test-results/test/*.xml'
         }
+
+        stage('test(SonarQube Analysis)') { //SonarQube 분석
+
+            def scannerHome = tool 'SonarQube Scanner' // Jenkins에서 SonarQubeScanner를 설치하고 등록한 도구 이름
+            def PROJECTDIR = pwd() //dir 확인
+
+            withSonarQubeEnv() { // 분석 시작
+                sonarAnalysis = sh(returnStatus: true, script:
+                    """
+                    ${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.projectKey=${SONAR_PROJECT} \
+                    -Dsonar.projectName=${SONAR_PROJECT} \
+                    -Dsonar.report.export.path=${scannerHome}/.scannerwork/sonar-report.json \
+                    -Ddetekt.sonar.kotlin.config.path=default-detekt-config.yml \
+                    -Dsonar.sources=src/main/java,src/main/resources \
+                    -Dsonar.exclusions='**/util/**,**/support/**,**/dto/**,**/entity/**' \
+                    -Dsonar.java.sourcesion=1.8 \
+                    -Dsonar.sourceEncoding=UTF-8 \
+                    -Dsonar.java.binaries=build/classes \
+                    -Dsonar.coverage.jacoco.xmlReportPaths=${PROJECTDIR}/build/reports/jacoco/test/jacocoTestReport.xml \
+                    -Dsonar.projectBaseDir=${PROJECTDIR}
+                    """)
+            }
+
+            //분석 후 결과 확인
+            while (true){
+                def sonarScannStatus = sh(returnStdout: true, script: // 소나큐브 분석 상태 API 확인
+                    """
+                    curl -u admin:'admin1234' -X GET http://localhost:9000/api/ce/component?component=${SONAR_PROJECT}
+                    """)
+                //queue에 아무것도 없으면 수행
+                if (sonarScannStatus.contains('"queue":[]')){
+
+                    if (sonarAnalysis == 0) {
+                        def qualityGateStatus = sh(returnStdout: true, script: // 소나큐브 결과 API 확인
+                            """
+                            curl -u admin:'admin1234' -X GET http://localhost:9000/api/qualitygates/project_status?projectKey=${SONAR_PROJECT}
+                            """)
+
+                            if (qualityGateStatus.contains('"projectStatus":{"status":"ERROR"')) {
+                                // 소나큐브 품질 게이트 실패 시 빌드 종료
+                                echo 'SonarQube Quality Gate failed'
+                                error('SonarQube Quality Gate Failed')
+                            } else if (qualityGateStatus.contains('"projectStatus":{"status":"OK"')){
+
+                                // 소나큐브 품질 게이트 성공
+                                echo 'SonarQube Quality Gate Passed'
+                                }
+                        } else {
+                                // SonarQube 분석 단계 자체가 실패한 경우 빌드 종료
+                                echo 'SonarQube Analysis Failed'
+                                error('SonarQube Analysis Failed')
+                            }
+                    break
+                }else {
+                    //queue에 내용이 있을 경우 1초 대기
+                    sleep time: 1
+                }
+            }
+         }
+
     } catch (e) {
+        echo 'Jenkins Failed'
     }
 }
 
