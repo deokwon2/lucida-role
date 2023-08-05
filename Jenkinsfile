@@ -24,8 +24,8 @@ def DOCKER_IMAGE_TAGS = "0.1.${env.BUILD_NUMBER}"  // 생성하는 Docker image 
 // }
 
 node { 
-    jdk = tool name: 'openJDK 17'
-    env.JAVA_HOME = "${jdk}"
+    //jdk = tool name: 'openJDK 17'
+    //env.JAVA_HOME = "${jdk}"
     try {
         stage('Checkout') {
             checkout scm
